@@ -1,63 +1,44 @@
-// View data
-d3.json("samples.json").then( (data)=>{
-    console.log(data);
+// Use D3 fetch to read the JSON file
+// The data from the JSON file is arbitrarily named importedData as the argument
+d3.json("samples.json").then( (importedData)=>{
+    console.log(importedData);
+    var data = importedData;
+
+  // Sort the data array using the greekSearchResults value
+  data.sort(function(a, b) {
+    return parseFloat(b.sample_values) - parseFloat(a.sample_values);
+  });
+
+  // Slice the first 10 objects for plotting
+  data = data.slice(0, 10);
+
+  // Reverse the array due to Plotly's defaults
+  data = data.reverse();
+
+   // Trace1 for the Greek Data
+ var step1 = {
+    x: data.map(row => row.sample_values),
+    y: data.map(row => row.otu_ids),
+    text: data.map(row => row.otu_ids),
+    name: "Top 10 OTUs",
+    type: "bar",
+    orientation: "h"
+  };
+  
+  // data
+  var chartData = [step1];
+
+  // Apply the group bar mode to the layout
+  var layout = {
+    title: "Top 10 OTUs",
+    margin: {
+      l: 100,
+      r: 100,
+      t: 100,
+      b: 100
+    }
+  };
+
+  // Render the plot to the div tag with id "app"
+  Plotly.newPlot("app", chartData, layout);
 });
-
-// Initialize Page
-function init(){
-    d3.json("samples.json").then((data)=>{
-
-        // Create dropdown Menu
-        // Use select.append to add options w/ texts and value
-
-        // Build charts and metadata for the first sample aka first "name" in names array
-
-        // Create bar chart for the first subject in the data
-
-var layout = {
-    title: "'Bar' Chart",
-    xaxis: { title: "Drinks"},
-    yaxis: { title: "% of Drinks Ordered"}
-};
-
-Plotly.newPlot("plot", data, layout);
-
-
-        // Get the variables necessary to create bar plot
-        var values = data.samples[0].sample_values;
-        var labels = data.samples[0].otu_ids;
-        var hovertext = data.samples[0].otu_labels;
-
-        // Use slice to get the top 10 values & reverse to make bars stack greatest to smallest
-        
-        // Create your bar chart using plotly
-
-        // Bubble plot
-
-        // Insert metadata into panel for first subject
-
-        var mData = d3.select("#sample-metadata");
-        // choose first subject's metadata to get selectedMetadata
-        // selectedMetadata --> Append something for each
-        // Use Object.entries to iterate over selectedMetata
-    });
-}
-
-// Update plots and metadata for newly selected value
-function optionChanged(selectValue){
-    d3.json("samples.json").then((data)=> {
-        // Filter data by matching id for samples to the selectValue
-        
-        // Update values for barchart
-        // Use restlye to update bar chart
-        plotly.restyle("bar", update);
-        
-        // Update values for bubbleplot
-        // Use restyle to update bubbleplot
-
-        
-        // Build metadata based on the filter
-    });
-}
-
-init();
